@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TaskN1.Data;
 using TaskN1.Models;
 
@@ -94,23 +95,13 @@ namespace TaskN1.Controllers
                     {
                         await person.ImageFile.CopyToAsync(filestream);
                     }
-
-
                         _context.Add(person);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                else
-                {
-                    ViewData["Message"] = "გთხოვთ მიუთითოთ სწორი დაბადების წელი, მინიმალური ასაკი=18";
-
-                }
+                else {ViewData["Message"] = "გთხოვთ მიუთითოთ სწორი დაბადების წელი, მინიმალური ასაკი=18";}
             }
-            else
-            {
-
-
-            }
+            else{ }
             return View(person);
         }
 
@@ -136,15 +127,27 @@ namespace TaskN1.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,Picture,ConnectedPeople")] Person person)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,ImageFile,ConnectedPeople")] Person person)
         {
             if (id != person.ID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+                if (ModelState.IsValid && person.ImageFile!=null)
+                {
+
+                //save image to wwwRoot
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string fileName = Path.GetFileNameWithoutExtension(person.ImageFile.FileName);
+                string extension = Path.GetExtension(person.ImageFile.FileName);
+                person.Picture = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                using (var filestream = new FileStream(path, FileMode.Create))
+                {
+                    await person.ImageFile.CopyToAsync(filestream);
+                }
+
                 try
                 {
                     _context.Update(person);
@@ -162,7 +165,7 @@ namespace TaskN1.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+                }
             return View(person);
         }
 
@@ -189,7 +192,15 @@ namespace TaskN1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+             
             var person = await _context.Person.FindAsync(id);
+            if (person.Picture != null)
+            {
+                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", person.Picture);
+                if (System.IO.File.Exists(imagePath))
+                    System.IO.File.Delete(imagePath);
+
+            }
             _context.Person.Remove(person);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

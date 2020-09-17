@@ -1,16 +1,15 @@
 ﻿@model TaskN1.Models.Person
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "ინფორმაციის შეცვლა";
 }
 
-<h1>Edit</h1>
+<h1>ინფორმაციის შეცვლა </h1>
 
-<h4>Person</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit"enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
@@ -37,6 +36,7 @@
                 <label asp-for="PersonBirthDate" class="control-label"></label>
                 <input asp-for="PersonBirthDate" class="form-control" />
                 <span asp-validation-for="PersonBirthDate" class="text-danger"></span>
+                @ViewData["Message"]
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
@@ -49,9 +49,10 @@
                 <span asp-validation-for="Mobile" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Picture" class="control-label"></label>
-                <input asp-for="Picture" class="form-control" />
-                <span asp-validation-for="Picture" class="text-danger"></span>
+                <input asp-for="ImageFile" accept="image/*" />
+
+                     <img src="@("~/image/" + Model.Picture)" asp-append-version="true" width="250" height="250" />             
+
             </div>
             <div class="form-group">
                 <label asp-for="ConnectedPeople" class="control-label"></label>

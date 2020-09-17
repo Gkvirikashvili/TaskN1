@@ -48,15 +48,11 @@ namespace TaskN1.Models
         [RegularExpression("^[0-9]{0,11}$", ErrorMessage = "გთხოვთ შეიყვანოთ ციფრები")]
         public string PersonalID { get; set; } //ტექსტური, სავალდებულო, 11 ციფრი
 
-        //[RegularExpression(@"((?:0[1-9])|(?:1[0-2]))\/((?:0[0-9])|(?:[1-2][0-9])|(?:3[0-1]))\/(\d{4})", ErrorMessage = "გთხოვთ მიუთითოთ თვე/დღე/წელი")]
-        //[Display(Name = "დაბადების თარიღი")]
-        //public string BirthDate { get; set; }  //თარიღი, სავალდებულო, მინიმუმ 18 წლის
-
+      
 
         [Display(Name = "დაბადების თარიღი")]
         [Required(ErrorMessage = "გთხოვთ მიუთითოთ დაბადების თარიღი")]
         [DataType(DataType.Date)]
-        // [RegularExpression("^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)/d/d$", ErrorMessage = "მინიმალური ასაკი = 18")]
         public DateTime PersonBirthDate { get; set; }
 
         [Display(Name = "დაბადების ქალაქი")]
@@ -77,6 +73,7 @@ namespace TaskN1.Models
        // public string ImageName { get; set; }
 
         [NotMapped]
+        [Required(ErrorMessage ="გთხოვთ ატვირთოთ სურათი")]
         public IFormFile ImageFile { get; set; }
     }
 
