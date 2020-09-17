@@ -1,0 +1,89 @@
+﻿@model IEnumerable<TaskN1.Models.Person>
+
+@{
+    ViewData["Title"] = "ცნობარი";
+}
+
+<h1>ცნობარი</h1>
+
+<p>
+    <a asp-action="Create">ფიზიკური პირის დამატება</a>
+</p>
+<form asp-controller="People" asp-action="Index">
+    <p>
+        ძებნა: <input type="text" name="SearchString">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonalID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonBirthDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConnectedPeople)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonalID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonBirthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Picture)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConnectedPeople)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">შეცვლა</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">დეტალურად</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">წაშლა</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
