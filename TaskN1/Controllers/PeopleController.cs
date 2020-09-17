@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,10 +16,12 @@ namespace TaskN1.Controllers
     public class PeopleController : Controller
     {
         private readonly MvcPersonContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public PeopleController(MvcPersonContext context)
+        public PeopleController(MvcPersonContext context,IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this._hostEnvironment = hostEnvironment;
         }
 
         public async Task<IActionResult> Index(string searchString)
@@ -74,14 +77,26 @@ namespace TaskN1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,Picture,ConnectedPeople")] Person person)
+        public async Task<IActionResult> Create([Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,ImageFile,ConnectedPeople")] Person person)
         {
 
             if (ModelState.IsValid)
             {
                 if ((DateTime.Now.Year - person.PersonBirthDate.Year) > 18)
                 {
-                    _context.Add(person);
+                    //save image to wwwRoot
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Path.GetFileNameWithoutExtension(person.ImageFile.FileName);
+                    string extension = Path.GetExtension(person.ImageFile.FileName);
+                    person.Picture=fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                    using (var filestream = new FileStream(path,FileMode.Create))
+                    {
+                        await person.ImageFile.CopyToAsync(filestream);
+                    }
+
+
+                        _context.Add(person);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -184,5 +199,10 @@ namespace TaskN1.Controllers
         {
             return _context.Person.Any(e => e.ID == id);
         }
+
+
+       
+
+
     }
 }

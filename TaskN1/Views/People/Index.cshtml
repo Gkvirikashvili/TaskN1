@@ -73,7 +73,14 @@
                 @Html.DisplayFor(modelItem => item.Mobile)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Picture)
+                @if (item.Picture != null)
+                {
+                     <img src="@("~/image/" + item.Picture)" asp-append-version="true" width="250" height="250" /> 
+                 }
+                     else
+                     {
+                                @Html.DisplayFor(modelItem => item.Picture)
+                     }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ConnectedPeople)
