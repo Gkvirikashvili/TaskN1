@@ -55,15 +55,8 @@
             @Html.DisplayNameFor(model => model.Picture)
         </dt>
         <dd class="col-sm-10">
-            @if (Model.Picture != null)
-             {
-                <img src="@("~/image/" + Model.Picture)" 
-                asp-append-version="true" width="250" height="250" /> 
-             }
-                 else
-                 {
-                        @Html.DisplayFor(modelItem => Model.Picture)
-                 }
+            <img src="@("~/image/" + Model.Picture)" 
+             asp-append-version="true" width="250" height="250" /> 
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ConnectedPeople)

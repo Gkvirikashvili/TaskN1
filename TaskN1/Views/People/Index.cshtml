@@ -11,8 +11,8 @@
 </p>
 <form asp-controller="People" asp-action="Index">
     <p>
-        ძებნა: <input type="text" name="SearchString">
-        <input type="submit" value="Filter" />
+        <input type="text" name="SearchString">
+        <input type="submit" value="ძებნა" />
     </p>
 </form>
 <table class="table">
@@ -73,14 +73,7 @@
                 @Html.DisplayFor(modelItem => item.Mobile)
             </td>
             <td>
-                @if (item.Picture != null)
-                {
-                     <img src="@("~/image/" + item.Picture)" asp-append-version="true" width="250" height="250" /> 
-                 }
-                     else
-                     {
-                                @Html.DisplayFor(modelItem => item.Picture)
-                     }
+                <img src="@("~/image/" + item.Picture)" asp-append-version="true" width="250" height="250" /> 
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ConnectedPeople)
