@@ -24,12 +24,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Sex" class="control-label"></label>
-                <p> </p>
-                <input name="Sex" type="radio" value="მამაკაცი" required="required" />
-                <span>მამაკაცი</span> <br />
-                <input name="Sex" type="radio" value="ქალი" required="required"/>
-                <span>ქალი</span> <br />
-                <span asp-validation-for="Sex"></span>
+                @Html.DropDownListFor(model => model.Sex, new SelectList(new[]
+                    {" ","ქალი","კაცი"}))
             </div>
             <div class="form-group">
                 <label asp-for="PersonalID" class="control-label"></label>
@@ -40,12 +36,13 @@
                 <label asp-for="PersonBirthDate" class="control-label"></label>
                 <input asp-for="PersonBirthDate" class="form-control" />
                 <span asp-validation-for="PersonBirthDate" class="text-danger"></span>
-                @ViewData["Message"]
+                @ViewData["Date"]
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
+                <br>
+                @Html.DropDownListFor(model => model.City, new SelectList(new[]
+                                {" ","თბილისი","ბათუმი","ქუთაისი","რუსთავი","გორი","ზუგდიდი","ფოთი","ხაშური","სამტრედია","სენაკი"}))
             </div>
             <div class="form-group">
                 <label asp-for="Mobile" class="control-label"></label>
@@ -53,16 +50,14 @@
                 <span asp-validation-for="Mobile" class="text-danger"></span>
             </div>
             <div class="form-group">
-            <label asp-for="ImageFile" class="control-label"></label>
-            <input asp-for="ImageFile" accept="image/*" />
+            <input asp-for="ImageFile" accept="image/*"/>
             <span asp-validation-for="ImageFile" class="text-danger"></span>
         </div>
 
-
             <div class="form-group">
                 <label asp-for="ConnectedPeople" class="control-label"></label>
-                <input asp-for="ConnectedPeople" class="form-control" />
-                <span asp-validation-for="ConnectedPeople" class="text-danger"></span>
+                @Html.DropDownListFor(model => model.City, new SelectList(new[]
+               {" ","კოლეგა","ნაცნობი","ნათესავი","სხვა"}))
             </div>
             <div class="form-group">
                 <input type="submit" value="დამატება" class="btn btn-primary" />
@@ -74,7 +69,6 @@
 <div>
     <a asp-action="Index"> მთავარ გვერდზე დაბრუნება</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

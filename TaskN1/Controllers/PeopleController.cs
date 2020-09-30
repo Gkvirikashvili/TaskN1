@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Logging;
 using TaskN1.Data;
 using TaskN1.Migrations;
@@ -20,6 +21,7 @@ namespace TaskN1.Controllers
     {
         private readonly MvcPersonContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
+        
 
         public PeopleController(MvcPersonContext context,IWebHostEnvironment hostEnvironment)
         {
@@ -40,7 +42,6 @@ namespace TaskN1.Controllers
             }
             return View(await person.ToListAsync());
         }
-
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -67,13 +68,15 @@ namespace TaskN1.Controllers
         {           
             if (ModelState.IsValid)
             {
-                if (((DateTime.Now.Month - person.PersonBirthDate.Month) >= 0 & (DateTime.Now.Day - person.PersonBirthDate.Day) >= 0) & ((DateTime.Now.Year - person.PersonBirthDate.Year) >= 18))
+                int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
+                    ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
+                    ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
+
+                if ((ResultYear >= 18 & ResultYear <= 100) & ((ResultMonth >= 0) & (ResultDay >= 0)))
                 {
                         string wwwRootPath = _hostEnvironment.WebRootPath;
-                        string fileName = Path.GetFileNameWithoutExtension(person.ImageFile.FileName);
-                        string extension = Path.GetExtension(person.ImageFile.FileName);
-                        person.Picture = fileName += DateTime.Now.ToString("yymmssfff") + extension;
-                        string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                        person.Picture = Path.GetFileName(person.ImageFile.FileName);
+                        string path = Path.Combine(wwwRootPath + "/Image/", person.Picture);
                         using (var filestream = new FileStream(path, FileMode.Create))
                         {
                             await person.ImageFile.CopyToAsync(filestream);
@@ -82,7 +85,7 @@ namespace TaskN1.Controllers
                         await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
                 }
-                else { ViewData["Message"] = "გთხოვთ მიუთითოთ სწორი დაბადების წელი, მინიმალური ასაკი=18"; }
+                else { ViewData["Date"] = "გთხოვთ მიუთითოთ სწორი დაბადების წელი, მინიმალური ასაკი=18"; }
             }
             return View(person);
         }
@@ -109,19 +112,21 @@ namespace TaskN1.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (((DateTime.Now.Month - person.PersonBirthDate.Month) >= 0 & (DateTime.Now.Day - person.PersonBirthDate.Day) >= 0) & ((DateTime.Now.Year - person.PersonBirthDate.Year) >= 18))
-                {
-                    //save image to wwwRoot
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(person.ImageFile.FileName);
-                    string extension = Path.GetExtension(person.ImageFile.FileName);
-                    person.Picture = fileName += DateTime.Now.ToString("yymmssfff") + extension;
-                    string path = Path.Combine(wwwRootPath + "/Image/", fileName);
-                    using (var filestream = new FileStream(path, FileMode.Create))
-                    {
-                        await person.ImageFile.CopyToAsync(filestream);
-                    }
+                int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month);
+                int ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day);
+                int ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
 
+                if ((ResultYear >= 18 & ResultYear <= 100) & ((ResultMonth >= 0) & (ResultDay >= 0)))
+                {
+                   
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        person.Picture = Path.GetFileName(person.ImageFile.FileName);
+                        string path = Path.Combine(wwwRootPath + "/Image/", person.Picture);
+                        using (var filestream = new FileStream(path, FileMode.Create))
+                        {
+                            await person.ImageFile.CopyToAsync(filestream);
+                        }
+                    
                     try
                     {
                         _context.Update(person);
@@ -140,6 +145,7 @@ namespace TaskN1.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
+                else{ ViewData["DateCahnge"] = "ასაკი,შეცვლილია არაკორექტულად, გთხოვთ მიუთითოთ სწორი თარიღი"; }
             }
             return View(person);
         }
