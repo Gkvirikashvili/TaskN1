@@ -72,7 +72,7 @@ namespace TaskN1.Controllers
                     ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
                     ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
 
-                if ((ResultYear >= 18 & ResultYear <= 100) & ((ResultMonth >= 0) & (ResultDay >= 0)))
+                if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
                 {
                         string wwwRootPath = _hostEnvironment.WebRootPath;
                         person.Picture = Path.GetFileName(person.ImageFile.FileName);
@@ -116,7 +116,7 @@ namespace TaskN1.Controllers
                 int ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day);
                 int ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
 
-                if ((ResultYear >= 18 & ResultYear <= 100) & ((ResultMonth >= 0) & (ResultDay >= 0)))
+                if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
                 {
                    
                         string wwwRootPath = _hostEnvironment.WebRootPath;
