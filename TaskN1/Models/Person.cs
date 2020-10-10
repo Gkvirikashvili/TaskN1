@@ -55,7 +55,7 @@ namespace TaskN1.Models
         public string ConnectedPeople { get; set; }  
 
         [NotMapped]
-        [Required(ErrorMessage = "გთხოვთ ატვირთოთ სურათი")]
+        //[Required(ErrorMessage = "გთხოვთ ატვირთოთ სურათი")]
         public IFormFile ImageFile { get; set; }
     }
 }

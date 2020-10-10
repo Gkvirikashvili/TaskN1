@@ -21,14 +21,12 @@ namespace TaskN1.Controllers
     {
         private readonly MvcPersonContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
-        
 
         public PeopleController(MvcPersonContext context,IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             this._hostEnvironment = hostEnvironment;
         }
-
         public async Task<IActionResult> Index(string searchString)
         {
             var person = from p in _context.Person
@@ -61,7 +59,6 @@ namespace TaskN1.Controllers
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,ImageFile,ConnectedPeople")] Person person)
@@ -104,7 +101,7 @@ namespace TaskN1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,ImageFile,ConnectedPeople")] Person person)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,Picture,ImageFile,ConnectedPeople")] Person person)
         {
             if (id != person.ID)
             {
@@ -112,13 +109,14 @@ namespace TaskN1.Controllers
             }
             if (ModelState.IsValid)
             {
-                int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month);
-                int ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day);
-                int ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
+                int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
+                    ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
+                    ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
 
                 if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
                 {
-                   
+                    if (person.ImageFile != null)
+                    {
                         string wwwRootPath = _hostEnvironment.WebRootPath;
                         person.Picture = Path.GetFileName(person.ImageFile.FileName);
                         string path = Path.Combine(wwwRootPath + "/Image/", person.Picture);
@@ -126,7 +124,7 @@ namespace TaskN1.Controllers
                         {
                             await person.ImageFile.CopyToAsync(filestream);
                         }
-                    
+                    }
                     try
                     {
                         _context.Update(person);
@@ -149,7 +147,6 @@ namespace TaskN1.Controllers
             }
             return View(person);
         }
-
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
