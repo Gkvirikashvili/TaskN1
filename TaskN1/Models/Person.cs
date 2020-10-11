@@ -57,5 +57,6 @@ namespace TaskN1.Models
         [NotMapped]
         //[Required(ErrorMessage = "გთხოვთ ატვირთოთ სურათი")]
         public IFormFile ImageFile { get; set; }
+
     }
 }

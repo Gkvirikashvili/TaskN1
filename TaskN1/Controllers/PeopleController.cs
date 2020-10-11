@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using TaskN1.Data;
 using TaskN1.Migrations;
 using TaskN1.Models;
+using static TaskN1.Models.Person;
 
 namespace TaskN1.Controllers
 {
@@ -27,6 +28,7 @@ namespace TaskN1.Controllers
             _context = context;
             this._hostEnvironment = hostEnvironment;
         }
+
         public async Task<IActionResult> Index(string searchString)
         {
             var person = from p in _context.Person
@@ -59,12 +61,14 @@ namespace TaskN1.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,PersonBirthDate,City,Mobile,ImageFile,ConnectedPeople")] Person person)
+        public async Task<IActionResult> Create([Bind("ID,Name,Surname,Sex,PersonalID,BirthDate,Picture,PersonBirthDate,City,Mobile,ImageFile,ConnectedPeople")] Person person)
         {           
             if (ModelState.IsValid)
             {
+
                 int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
                     ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
                     ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
