@@ -67,15 +67,7 @@ namespace TaskN1.Controllers
         {           
             if (ModelState.IsValid)
             {
-
-                //int age = now.Year - birthDate.Year;
-
-                //if (now.Month < birthDate.Month || (now.Month == birthDate.Month && now.Day < birthDate.Day))
-                //    age--;
-
-
                 Age(person, out int Day, out int Month, out int Year);
-
                 if ((Year > 18 & Year <= 100)||((Month > 0) & (Year == 18))|| (((Month == 0)&(Day>=0)) & (Year == 18)))
                 {
                         FileUpload(person, _hostEnvironment);
@@ -111,8 +103,7 @@ namespace TaskN1.Controllers
             if (ModelState.IsValid)
             {
                 Age(person, out int Day, out int Month, out int Year);
-
-                if ((Year > 18 & Year <= 100) || (((Month >= 0) & (Day >= 0)) & (Year == 18)))
+                if ((Year > 18 & Year <= 100) || ((Month > 0) & (Year == 18)) || (((Month == 0) & (Day >= 0)) & (Year == 18)))
                 {
                     if (person.ImageFile != null)
                     {
