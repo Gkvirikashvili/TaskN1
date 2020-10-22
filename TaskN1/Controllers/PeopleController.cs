@@ -33,7 +33,6 @@ namespace TaskN1.Controllers
         {
             var person = from p in _context.Person
                          select p;
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 person = person.Where(s => s.Name.Contains(searchString)
@@ -68,20 +67,13 @@ namespace TaskN1.Controllers
         {           
             if (ModelState.IsValid)
             {
-
                 int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
                     ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
                     ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
 
                 if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
                 {
-                        string wwwRootPath = _hostEnvironment.WebRootPath;
-                        person.Picture = Path.GetFileName(person.ImageFile.FileName);
-                        string path = Path.Combine(wwwRootPath + "/Image/", person.Picture);
-                        using (var filestream = new FileStream(path, FileMode.Create))
-                        {
-                            await person.ImageFile.CopyToAsync(filestream);
-                        }
+                        FileUpload(person, _hostEnvironment);
                         _context.Add(person);
                         await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
@@ -119,16 +111,8 @@ namespace TaskN1.Controllers
 
                 if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
                 {
-                    if (person.ImageFile != null)
-                    {
-                        string wwwRootPath = _hostEnvironment.WebRootPath;
-                        person.Picture = Path.GetFileName(person.ImageFile.FileName);
-                        string path = Path.Combine(wwwRootPath + "/Image/", person.Picture);
-                        using (var filestream = new FileStream(path, FileMode.Create))
-                        {
-                            await person.ImageFile.CopyToAsync(filestream);
-                        }
-                    }
+                    if (person.ImageFile != null) FileUpload(person, _hostEnvironment);
+
                     try
                     {
                         _context.Update(person);
@@ -186,5 +170,19 @@ namespace TaskN1.Controllers
         {
             return _context.Person.Any(e => e.ID == id);
         }
+
+
+
+        public async void FileUpload(Person person, IWebHostEnvironment _hostEnvironment)
+        {
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            person.Picture = Path.GetFileName(person.ImageFile.FileName);
+            string path = Path.Combine(wwwRootPath + "/Image/", person.Picture);
+            using (var filestream = new FileStream(path, FileMode.Create))
+            {
+                await person.ImageFile.CopyToAsync(filestream);
+            }
+        }
     }  
+    
 }
