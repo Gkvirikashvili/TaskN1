@@ -67,11 +67,16 @@ namespace TaskN1.Controllers
         {           
             if (ModelState.IsValid)
             {
-                int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
-                    ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
-                    ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
 
-                if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
+                //int age = now.Year - birthDate.Year;
+
+                //if (now.Month < birthDate.Month || (now.Month == birthDate.Month && now.Day < birthDate.Day))
+                //    age--;
+
+
+                Age(person, out int Day, out int Month, out int Year);
+
+                if ((Year > 18 & Year <= 100)||((Month > 0) & (Year == 18))|| (((Month == 0)&(Day>=0)) & (Year == 18)))
                 {
                         FileUpload(person, _hostEnvironment);
                         _context.Add(person);
@@ -105,13 +110,14 @@ namespace TaskN1.Controllers
             }
             if (ModelState.IsValid)
             {
-                int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
-                    ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
-                    ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
+                Age(person, out int Day, out int Month, out int Year);
 
-                if ((ResultYear > 18 & ResultYear <= 100) || (((ResultMonth >= 0) & (ResultDay >= 0)) & (ResultYear == 18)))
+                if ((Year > 18 & Year <= 100) || (((Month >= 0) & (Day >= 0)) & (Year == 18)))
                 {
-                    if (person.ImageFile != null) FileUpload(person, _hostEnvironment);
+                    if (person.ImageFile != null)
+                    {
+                        FileUpload(person, _hostEnvironment); 
+                    }
 
                     try
                     {
@@ -182,6 +188,19 @@ namespace TaskN1.Controllers
             {
                 await person.ImageFile.CopyToAsync(filestream);
             }
+        }
+
+        public static void  Age(Person person, out int Day, out int Month, out int Year)
+        {
+            int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
+                    ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
+                    ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
+            Day = ResultDay;
+            Month = ResultMonth;
+            Year = ResultYear;
+
+
+
         }
     }  
     
