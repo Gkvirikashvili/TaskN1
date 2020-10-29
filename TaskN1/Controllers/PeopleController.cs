@@ -109,7 +109,6 @@ namespace TaskN1.Controllers
                     {
                         FileUpload(person, _hostEnvironment); 
                     }
-
                     try
                     {
                         _context.Update(person);
@@ -168,8 +167,6 @@ namespace TaskN1.Controllers
             return _context.Person.Any(e => e.ID == id);
         }
 
-
-
         public async void FileUpload(Person person, IWebHostEnvironment _hostEnvironment)
         {
             string wwwRootPath = _hostEnvironment.WebRootPath;
@@ -180,18 +177,14 @@ namespace TaskN1.Controllers
                 await person.ImageFile.CopyToAsync(filestream);
             }
         }
-
         public static void  Age(Person person, out int Day, out int Month, out int Year)
         {
             int ResultMonth = (DateTime.Now.Month - person.PersonBirthDate.Month),
-                    ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
-                    ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
-            Day = ResultDay;
-            Month = ResultMonth;
-            Year = ResultYear;
-
-
-
+                ResultDay = (DateTime.Now.Day - person.PersonBirthDate.Day),
+                ResultYear = (DateTime.Now.Year - person.PersonBirthDate.Year);
+                     Day = ResultDay;
+                     Month = ResultMonth;
+                     Year = ResultYear;
         }
     }  
     
